@@ -4,7 +4,7 @@ import path from 'path';
 
 const storage = (uploadPath: string): StorageEngine =>
   multer.diskStorage({
-    destination: path.join(__dirname, './uploads', uploadPath),
+    destination: path.join(__dirname, '../../uploads', uploadPath),
     filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
       cb(null, `${Date.now()}-${file.originalname}`);
     },

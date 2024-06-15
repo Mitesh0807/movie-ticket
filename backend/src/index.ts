@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import asyncHandler from "express-async-handler";
 
 import logger from "./utils/logger";
 import upload from "./utils/multer";
@@ -9,9 +10,11 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+app.get("/healthcheck", (req: Request, res: Response) => {
+  res.send("OK");
 });
 
 app.post('/upload', upload('images').single('file'), (req: Request, res: Response) => {
