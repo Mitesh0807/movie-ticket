@@ -159,3 +159,128 @@ export const tempInsertMovie = asyncHandler(async (req: Request, res: Response) 
     
     console.log('Movies inserted successfully!');
 })
+
+
+
+
+
+
+
+
+export const tempInsertCinema = async (req: Request, res: Response): Promise<void> => {
+  const cinemas = [
+    {
+      name: 'Cineplex',
+      ticketPrice: 10,
+      city: 'new york',
+      seats: [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+      ],
+      seatsAvailable: 30,
+      image: 'https://res.cloudinary.com/demo/image/upload/v1648470728/cinemas/cineplex.jpg',
+    },
+    {
+      name: 'Regal Cinemas',
+      ticketPrice: 12,
+      city: 'los angeles',
+      seats: [
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+      ],
+      seatsAvailable: 35,
+      image: 'https://res.cloudinary.com/demo/image/upload/v1648470728/cinemas/regal.jpg',
+    },
+    {
+      name: 'AMC Theatres',
+      ticketPrice: 15,
+      city: 'chicago',
+      seats: [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+      ],
+      seatsAvailable: 40,
+      image: 'https://res.cloudinary.com/demo/image/upload/v1648470728/cinemas/amc.jpg',
+    },
+    {
+      name: 'Landmark Theatres',
+      ticketPrice: 18,
+      city: 'san francisco',
+      seats: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ],
+      seatsAvailable: 25,
+      image: 'https://res.cloudinary.com/demo/image/upload/v1648470728/cinemas/landmark.jpg',
+    },
+    {
+      name: 'Alamo Drafthouse',
+      ticketPrice: 20,
+      city: 'austin',
+      seats: [
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+      ],
+      seatsAvailable: 35,
+      image: 'https://res.cloudinary.com/demo/image/upload/v1648470728/cinemas/alamo.jpg',
+    },
+  ];
+  
+  // Insert the cinemas into the database
+ const cinemasde = await Cinema.insertMany(cinemas);
+  res.json(cinemasde);
+}
+
+
+
+
+
+export const tempInsetMany = async (req: Request, res: Response): Promise<void> => {
+  const movies = await Movie.find().select('_id').lean();
+  const cinemas = await Cinema.find().select('_id').lean();
+  
+  // Create an array of showtimes
+  const showtimes = [
+    {
+      startAt: '10:00 AM',
+      startDate: new Date('2023-06-16'),
+      endDate: new Date('2025-06-30'),
+      movieId: movies[0]._id, // Replace with a valid movie ID
+      cinemaId: cinemas[0]._id, // Replace with a valid cinema ID
+    },
+    {
+      startAt: '2:00 PM',
+      startDate: new Date('2023-06-17'),
+      endDate: new Date('2026-06-30'),
+      movieId: movies[1]._id, // Replace with a valid movie ID
+      cinemaId: cinemas[1]._id, // Replace with a valid cinema ID
+    },
+    {
+      startAt: '6:30 PM',
+      startDate: new Date('2023-06-18'),
+      endDate: new Date('2027-06-30'),
+      movieId: movies[2]._id, 
+      cinemaId: cinemas[2]._id,     },
+  ];
+  
+const result =  await Showtime.insertMany(showtimes);
+  
+  console.log('Showtimes inserted successfully!');
+
+  res.send(result);
+}
