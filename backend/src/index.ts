@@ -1,15 +1,28 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import asyncHandler from "express-async-handler";
 
 import logger from "./utils/logger";
 import upload from "./utils/multer";
+import cors from "cors";
+
+import connectDB from "./db/db.connection";
+
 
 
 dotenv.config();
+(async () => await connectDB())();
+
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
+
+
+//TODO: proper cors setup required
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
