@@ -2,5 +2,55 @@
     "parser": "@typescript-eslint/parser",
     "extends": ["plugin:@typescript-eslint/recommended"],
     "parserOptions": { "ecmaVersion": 2018, "sourceType": "module" },
-    "rules": {}
+    "rules": {},
+    "overrides": [
+      {
+        "files": ["*.ts"],
+        "rules": {
+          "sort-imports": [
+            "warn", 
+            { 
+              "ignoreCase": true, 
+              "ignoreDeclarationSort": true 
+            }
+          ],
+          "import/order": [
+            "warn",
+            {
+              "groups": [
+                "builtin",
+                "external",
+                "internal",
+                "parent",
+                "sibling",
+                "index",
+                "object",
+                "type"
+              ],
+              "pathGroups": [
+                { 
+                  "pattern": "@/**", 
+                  "group": "internal" 
+                }
+             ],
+             "pathGroupsExcludedImportTypes": ["internal"],
+             "newlines-between": "always",
+              "alphabetize": { 
+                "order": "asc", 
+                "caseInsensitive": true 
+              }
+            }
+          ],
+          "newline-after-var": ["warn", "always"],
+          "no-unused-vars": "warn",
+          "jsx-a11y/anchor-is-valid": "off",
+          "unused-imports/no-unused-imports": "warn",
+          "react-hooks/exhaustive-deps": "off",
+          "import/no-unresolved": "off"
+        },
+  
+        // custom plugins
+        "plugins": ["unused-imports"]
+      }
+    ]
   }
