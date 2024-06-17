@@ -5,14 +5,17 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
 import { SVGProps, useEffect, useState } from "react";
 import { useAppDispatch } from "@/store/store";
-import { IMovie } from "@/types";
+import { IGenre, IMovie } from "@/types";
 import { fetchMovies } from "@/store/slices/movies/movieActions";
+import { fetchGenres } from "@/store/slices/genres/genreActions";
+import { Separator } from "../ui/separator";
 
 export default function Component() {
   const [movies, setMovies] = useState<IMovie[]>([]);
+  const [genres, setGenres] = useState<IGenre[]>([]);
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchMovies())
@@ -23,7 +26,18 @@ export default function Component() {
       .catch((error) => {
         console.log(error);
       });
-  }, [dispatch]);
+
+    dispatch(fetchGenres())
+      .unwrap()
+      .then((data) => {
+        console.log(data, "data");
+        setGenres(data);
+      })
+      .catch((error) => {
+        console.log(error, "error");
+      });
+    return () => {};
+  }, []);
 
   return (
     <>
@@ -70,7 +84,7 @@ export default function Component() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                Upcoming Movies
+                Movies By Genre
               </h2>
               <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                 Check out the latest and greatest movies coming soon to a
@@ -78,91 +92,35 @@ export default function Component() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-            <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
-              <img
-                src="/placeholder.svg"
-                width="400"
-                height="600"
-                alt="Movie Poster"
-                className="w-full h-[500px] object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-bold">Oppenheimer</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">
-                  The story of J. Robert Oppenheimer and the creation of the
-                  atomic bomb.
-                </p>
-                <div className="flex justify-end mt-4">
-                  <Button variant="link" size="sm">
-                    Learn More
-                  </Button>
-                </div>
-              </div>
+          {genres && genres?.length && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+              {genres.map((genre) => (
+                <>
+                  <div
+                    key={genre._id}
+                    className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg"
+                  >
+                    <h3 className="text-xl font-bold">{genre.name}</h3>
+                    {movies &&
+                      movies
+                        .filter((movie) =>
+                          movie.genres.map((g) => g._id).includes(genre._id)
+                        )
+                        .map((movie) => (
+                          <img
+                            src={movie.image}
+                            width="400"
+                            height="600"
+                            alt="Movie Poster"
+                            className="w-full h-[500px] object-cover"
+                          />
+                        ))}
+                  </div>
+                  <Separator />
+                </>
+              ))}
             </div>
-            <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
-              <img
-                src="/placeholder.svg"
-                width="400"
-                height="600"
-                alt="Movie Poster"
-                className="w-full h-[500px] object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-bold">Barbie</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">
-                  A live-action film based on the popular Barbie doll.
-                </p>
-                <div className="flex justify-end mt-4">
-                  <Button variant="link" size="sm">
-                    Learn More
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
-              <img
-                src="/placeholder.svg"
-                width="400"
-                height="600"
-                alt="Movie Poster"
-                className="w-full h-[500px] object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-bold">
-                  Killers of the Flower Moon
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">
-                  A historical drama set in 1920s Oklahoma.
-                </p>
-                <div className="flex justify-end mt-4">
-                  <Button variant="link" size="sm">
-                    Learn More
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
-              <img
-                src="/placeholder.svg"
-                width="400"
-                height="600"
-                alt="Movie Poster"
-                className="w-full h-[500px] object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-bold">Dune: Part Two</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">
-                  The highly anticipated sequel to the 2021 sci-fi epic.
-                </p>
-                <div className="flex justify-end mt-4">
-                  <Button variant="link" size="sm">
-                    Learn More
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </>

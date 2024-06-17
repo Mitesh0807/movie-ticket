@@ -10,7 +10,7 @@ import { SignupPayload } from "@/types";
 import { signUp } from "@/store/slices/auth/authActions";
 import { useAppDispatch } from "@/store/store";
 
-export function Signup() {
+export default function Signup() {
   const {
     register,
     handleSubmit,

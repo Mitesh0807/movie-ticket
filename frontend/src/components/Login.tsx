@@ -12,7 +12,7 @@ import { LoginPayload } from "@/types";
 import { login } from "@/store/slices/auth/authActions";
 import { useAppDispatch } from "@/store/store";
 
-export function Login() {
+export default function Login() {
   const {
     register,
     handleSubmit,

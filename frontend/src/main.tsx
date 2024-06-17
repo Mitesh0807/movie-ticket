@@ -1,37 +1,55 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import "@/index.css";
 import { Provider } from "react-redux";
 import store from "@/store/store.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import ErrorPage from "@/error-page";
-import { Login } from "@/components/Login";
-import Dashboard from "@/components/Pages/Dashboard";
-import { Signup } from "@/components/Signup.tsx";
-import Layout from '@/components/Layout'
+import Layout from "@/components/Layout";
+import Loading from "./components/ui/Loading";
+
+const Dashboard = lazy(() => import("@/components/Pages/Dashboard"));
+const Login = lazy(() => import("@/components/Login"));
+const Signup = lazy(() => import("@/components/Signup.tsx"));
+const ErrorPage = lazy(() => import("@/error-page"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<Layout/>,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Layout />
+      </Suspense>
+    ),
     children: [
       {
         path: "/",
-        element: <Dashboard />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Dashboard />
+          </Suspense>
+        ),
         errorElement: <ErrorPage />,
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Login />
+          </Suspense>
+        ),
         errorElement: <ErrorPage />,
       },
       {
         path: "/signup",
-        element: <Signup />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Signup />
+          </Suspense>
+        ),
         errorElement: <ErrorPage />,
       },
-    ]
-  }
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

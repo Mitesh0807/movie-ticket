@@ -1,23 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IGenre } from '../../../types';
+import api from '@/utils/api';
 
 export const fetchGenres = createAsyncThunk('genres/fetchAll', async () => {
-  const response = await axios.get('');
+  const response = await api.get('/genres');
   return response.data;
 });
 
 export const createGenre = createAsyncThunk('genres/create', async (genre: IGenre) => {
-  const response = await axios.post('', genre);
+  const response = await api.post('/genres', genre);
   return response.data;
 });
 
 export const updateGenre = createAsyncThunk('genres/update', async (genre: IGenre) => {
-  const response = await axios.put(`${''}/${genre._id}`, genre);
+  const response = await api.put(`${'/genres'}/${genre._id}`, genre);
   return response.data;
 });
 
-export const deleteGenre = createAsyncThunk('genres/delete', async (id: string) => {
-  await axios.delete(`${''}/${id}`);
+export const deleteGenre = createAsyncThunk('/genres/delete', async (id: string) => {
+  await api.delete(`${'/genres'}/${id}`);
   return id;
 });

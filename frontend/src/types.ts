@@ -4,7 +4,7 @@ export interface IMovie {
   image?: string;
   trailer?: string;
   language: string;
-  genres: string[];
+  genres: IGenre[];
   director: string;
   cast: string;
   description: string;
@@ -24,7 +24,7 @@ export interface ICinema {
 }
 
 export interface IGenre {
-  _id?: string;
+  _id: string;
   name: string;
   description?: string;
 }

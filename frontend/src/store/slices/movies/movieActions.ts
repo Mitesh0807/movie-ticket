@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IMovie } from '../../../types';
-import api from '../../../utils/api';
+import api from '@/utils/api';
 
 export const fetchMovies = createAsyncThunk('movies/fetchAll', async () => {
   const response = await api.get('/movies');
