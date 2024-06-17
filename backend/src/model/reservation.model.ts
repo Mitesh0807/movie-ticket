@@ -6,9 +6,8 @@ export interface IReservation extends Document {
   seats: any[];
   ticketPrice: number;
   total: number;
-  movieId: mongoose.Types.ObjectId;
-  cinemaId: mongoose.Types.ObjectId;
-  username: string;
+  showtimeId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   phone: string;
   checkin: boolean;
 }
@@ -35,18 +34,14 @@ const reservationSchema: Schema = new Schema({
     type: Number,
     required: true,
   },
-  movieId: {
+  showtimeId: {
     type: Schema.Types.ObjectId,
-    ref: 'Movie',
+    ref: 'Showtime',
     required: true,
   },
-  cinemaId: {
+  userId: {
     type: Schema.Types.ObjectId,
-    ref: 'Cinema',
-    required: true,
-  },
-  username: {
-    type: String,
+    ref: 'User',
     required: true,
   },
   phone: {

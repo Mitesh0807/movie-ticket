@@ -1,5 +1,14 @@
-import Reservation from "@/model/reservation.model";
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import Reservation from '@/model/reservation.model';
+import Showtime from '@/model/showtime.model';
+import User from '@/model/user.model';
+
+/*
+TODO: Some functionality needs to corrected here like current user can checkin only their reservations
+checkin can be done only once,
+delete can be done only by superadmin or may be with some other role like admin or cinema admin , by user only
+cancel can be done only by superadmin or may be with some other role like admin or cinema admin , by user only
+*/
 
 /**
  * Creates a new reservation.
@@ -9,6 +18,11 @@ import { Request, Response } from "express";
  * @return {Promise<void>} A promise that resolves when the reservation is created.
  */
 export const createReservation = async (req: Request, res: Response): Promise<void> => {
+  if (req.body?.userId !== req.user?._id) {
+    res.status(401).send('Unauthorized');
+    return;
+  }
+
   const reservation = new Reservation(req.body);
   try {
     await reservation.save();
@@ -19,7 +33,7 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
 };
 
 /**
- * Retrieves all reservations.
+ * Retrieves all reservations for the current user.
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
@@ -27,7 +41,14 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
  */
 export const getAllReservations = async (req: Request, res: Response): Promise<void> => {
   try {
-    const reservations = await Reservation.find({});
+    const user = req.user;
+    if (!user) {
+      res.sendStatus(401);
+      return;
+    }
+    const reservations = await Reservation.find({ userId: user._id })
+      .populate('showtimeId', 'movieId cinemaId')
+      .exec();
     res.send(reservations);
   } catch (e) {
     res.status(400).send(e);
@@ -44,7 +65,7 @@ export const getAllReservations = async (req: Request, res: Response): Promise<v
 export const getReservationById = async (req: Request, res: Response): Promise<void> => {
   const _id = req.params.id;
   try {
-    const reservation = await Reservation.findById(_id);
+    const reservation = await Reservation.findById(_id).populate('showtimeId', 'movieId cinemaId').exec();
     if (!reservation) {
       res.sendStatus(404);
       return;
@@ -70,6 +91,14 @@ export const checkinReservationById = async (req: Request, res: Response): Promi
       res.sendStatus(404);
       return;
     }
+    if (reservation.userId.toString() !== req.user?._id.toString()) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+    if (reservation.checkin) {
+      res.status(400).send('Reservation already checked in');
+      return;
+    }
     reservation.checkin = true;
     await reservation.save();
     res.send(reservation);
@@ -88,16 +117,7 @@ export const checkinReservationById = async (req: Request, res: Response): Promi
 export const updateReservationById = async (req: Request, res: Response): Promise<void> => {
   const _id = req.params.id;
   const updates = Object.keys(req.body);
-  const allowedUpdates = [
-    'date',
-    'startAt',
-    'seats',
-    'ticketPrice',
-    'total',
-    'username',
-    'phone',
-    'checkin',
-  ];
+  const allowedUpdates = ['date', 'startAt', 'seats', 'ticketPrice', 'total', 'userId', 'phone', 'checkin'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
@@ -111,7 +131,10 @@ export const updateReservationById = async (req: Request, res: Response): Promis
       res.sendStatus(404);
       return;
     }
-
+    if (reservation.userId.toString() !== req.user?._id.toString()) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
     updates.forEach((update) => {
       (reservation as any)[update] = req.body[update];
     });
@@ -132,13 +155,32 @@ export const updateReservationById = async (req: Request, res: Response): Promis
 export const deleteReservationById = async (req: Request, res: Response): Promise<void> => {
   const _id = req.params.id;
   try {
-    const reservation = await Reservation.findByIdAndDelete(_id);
+    const reservation = await Reservation.findById(_id);
     if (!reservation) {
       res.sendStatus(404);
       return;
     }
+    if (
+      reservation.userId.toString() !== req.user?._id.toString() 
+    ) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+    const removedReservation = await Reservation.findByIdAndDelete(_id);
     res.send(reservation);
   } catch (e) {
-    res.sendStatus(400);
+    res.status(400).send(e);
   }
+};
+
+/**
+ * Temporary seed function for reservations.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the reservations are seeded.
+ */
+export const tempSeedForReservation = async (req: Request, res: Response): Promise<void> => {
+  // Implement the seeding logic here
+  res.send('Temporary seed for reservations.');
 };
