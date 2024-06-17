@@ -7,24 +7,31 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "@/error-page";
 import { Login } from "@/components/Login";
 import Dashboard from "@/components/Pages/Dashboard";
-import { Signup } from "./components/Signup.tsx";
+import { Signup } from "@/components/Signup.tsx";
+import Layout from '@/components/Layout'
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Dashboard />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-    errorElement: <ErrorPage />,
-  },
+    element:<Layout/>,
+    children: [
+      {
+        path: "/",
+        element: <Dashboard />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+        errorElement: <ErrorPage />,
+      },
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

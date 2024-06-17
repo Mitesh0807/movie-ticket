@@ -31,28 +31,30 @@ export default function Component() {
         <div className="container px-4 md:px-6">
           <Carousel className="rounded-xl">
             <CarouselContent>
-              { movies && movies.length && movies.map((movie) => (
-                <CarouselItem key={movie._id}>
-                  <div className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-xl">
-                    <img
-                      src={movie.image}
-                      width="1600"
-                      height="900"
-                      alt="Movie Poster"
-                      className="object-cover w-full h-full"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10">
-                      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl lg:text-5xl">
-                        {movie.title}
-                      </h2>
-                      <p className="text-gray-300 mt-2 sm:text-lg md:text-xl lg:text-2xl">
-                        {movie.description}
-                      </p>
+              {movies &&
+                movies.length &&
+                movies.map((movie) => (
+                  <CarouselItem key={movie._id}>
+                    <div className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-xl">
+                      <img
+                        src={movie.image}
+                        width="1600"
+                        height="900"
+                        alt="Movie Poster"
+                        className="object-cover w-full h-full"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10">
+                        <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl lg:text-5xl">
+                          {movie.title}
+                        </h2>
+                        <p className="text-gray-300 mt-2 sm:text-lg md:text-xl lg:text-2xl">
+                          {movie.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </CarouselItem>
-              ))}
+                  </CarouselItem>
+                ))}
             </CarouselContent>
             <CarouselPrevious className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-gray-900/50 hover:bg-gray-900/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 rounded-full p-2 text-gray-50 transition-colors">
               <ChevronLeftIcon className="h-6 w-6" />
@@ -208,5 +210,3 @@ function ChevronRightIcon(
     </svg>
   );
 }
-
-
