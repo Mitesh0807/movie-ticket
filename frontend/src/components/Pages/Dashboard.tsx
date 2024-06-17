@@ -11,6 +11,7 @@ import { IGenre, IMovie } from "@/types";
 import { fetchMovies } from "@/store/slices/movies/movieActions";
 import { fetchGenres } from "@/store/slices/genres/genreActions";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
 
 export default function Component() {
   const [movies, setMovies] = useState<IMovie[]>([]);
@@ -30,7 +31,6 @@ export default function Component() {
     dispatch(fetchGenres())
       .unwrap()
       .then((data) => {
-        console.log(data, "data");
         setGenres(data);
       })
       .catch((error) => {
@@ -84,7 +84,7 @@ export default function Component() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                Movies By Genre
+                Movies
               </h2>
               <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                 Check out the latest and greatest movies coming soon to a
@@ -92,36 +92,33 @@ export default function Component() {
               </p>
             </div>
           </div>
-          {genres && genres?.length && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-              {genres.map((genre) => (
-                <>
-                  <div
-                    key={genre._id}
-                    className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg"
-                  >
-                    <h3 className="text-xl font-bold">{genre.name}</h3>
-                    {movies &&
-                      movies
-                        .filter((movie) =>
-                          movie.genres.map((g) => g._id).includes(genre._id)
-                        )
-                        .map((movie) => (
-                          <img
-                            src={movie.image}
-                            width="400"
-                            height="600"
-                            alt="Movie Poster"
-                            className="w-full h-[500px] object-cover"
-                          />
-                        ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+            
+              {movies &&
+                movies.map((movie) => (
+                    <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
+                    <img
+                      src={movie.image}
+                      width="400"
+                      height="600"
+                      alt="Movie Poster"
+                      className="w-full h-[500px] object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="text-xl font-bold">Barbie</h3>
+                      <p className="text-gray-500 dark:text-gray-400 mt-2">
+                        A live-action film based on the popular Barbie doll.
+                      </p>
+                      <div className="flex justify-end mt-4">
+                        <Button variant="link" size="sm">
+                          Learn More
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <Separator />
-                </>
-              ))}
+                ))}
             </div>
-          )}
-        </div>
+          </div>
       </section>
     </>
   );
