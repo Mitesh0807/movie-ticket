@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import Reservation from '@/model/reservation.model';
-import Showtime from '@/model/showtime.model';
-import User from '@/model/user.model';
 
 /*
 TODO: Some functionality needs to corrected here like current user can checkin only their reservations
@@ -173,14 +171,5 @@ export const deleteReservationById = async (req: Request, res: Response): Promis
   }
 };
 
-/**
- * Temporary seed function for reservations.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @return {Promise<void>} A promise that resolves when the reservations are seeded.
- */
-export const tempSeedForReservation = async (req: Request, res: Response): Promise<void> => {
-  // Implement the seeding logic here
-  res.send('Temporary seed for reservations.');
-};
+
+

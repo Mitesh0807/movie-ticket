@@ -284,3 +284,47 @@ const result =  await Showtime.insertMany(showtimes);
 
   res.send(result);
 }
+
+
+export const tempReservation = async (req: Request, res: Response): Promise<void> => {
+  const showtimes = await Showtime.find({}).populate('cinemaId');
+
+    // Get the only user
+    const user = await User.findOne({});
+
+    // Generate random reservations
+    const reservations = [];
+    for (let i = 0; i < 10; i++) { // Generate 10 random reservations
+      const randomShowtime = showtimes[Math.floor(Math.random() * showtimes.length)];
+      //@ts-ignore
+      const randomSeats = generateRandomSeats(randomShowtime.cinemaId?.seats);
+
+      
+      const reservation = new Reservation({
+        date: randomShowtime.startDate,
+        startAt: randomShowtime.startAt,
+        seats: randomSeats,
+      //@ts-ignore
+        ticketPrice: randomShowtime.cinemaId?.ticketPrice,
+      //@ts-ignore
+        total: randomSeats.flat().filter(seat => seat === 1).length * randomShowtime.cinemaId?.ticketPrice,
+        showtimeId: randomShowtime._id,
+        userId: user?._id,
+        phone: `${Math.floor(Math.random() * 1000000000)}`, // Generate random phone number
+      });
+
+      reservations.push(reservation);
+    }
+
+    // Create new reservations
+    const createdReservations = await Reservation.create(reservations);
+    console.log(`Created ${createdReservations.length} reservations`);
+
+}
+
+      //@ts-ignore
+
+function generateRandomSeats(seats) {
+      //@ts-ignore
+  return seats.map(row => row.map(() => Math.random() < 0.2 ? 1 : 0));
+}

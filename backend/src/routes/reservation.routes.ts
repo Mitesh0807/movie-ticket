@@ -11,11 +11,11 @@ import { requireSuperadmin,authenticateUser } from '@/middlewares/auth.middlewar
 
 const router = Router();
 
-router.post('/reservations', authenticateUser, createReservation);
-router.get('/reservations', authenticateUser, getAllReservations);
-router.get('/reservations/:id', getReservationById);
-router.get('/reservations/checkin/:id', checkinReservationById);
-router.patch('/reservations/:id', requireSuperadmin, updateReservationById);
-router.delete('/reservations/:id', requireSuperadmin, deleteReservationById);
+router.post('/', authenticateUser, createReservation);
+router.get('/', authenticateUser,getAllReservations);
+router.get('/:id', getReservationById);
+router.get('/checkin/:id', checkinReservationById);
+router.patch('/:id', requireSuperadmin, updateReservationById);
+router.delete('/:id', requireSuperadmin, deleteReservationById);
 
 export default router;

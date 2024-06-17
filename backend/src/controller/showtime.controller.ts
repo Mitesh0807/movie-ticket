@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import Showtime from '@/model/showtime.model';
-import Cinema from '@/model/cinema.model';
-import Movie from '@/model/movies.model';
 
 
 /**
@@ -31,7 +29,7 @@ export const createShowtime = async (req: Request, res: Response): Promise<void>
  */
 export const getAllShowtimes = async (req: Request, res: Response): Promise<void> => {
   try {
-    const showtimes = await Showtime.find({});
+    const showtimes = await Showtime.find({}).populate('movieId').populate('cinemaId');
     res.send(showtimes);
   } catch (e) {
     res.status(400).send(e);
