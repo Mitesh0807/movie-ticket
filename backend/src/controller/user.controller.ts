@@ -21,7 +21,7 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
 
   const user = new User(userData);
   await user.save();
-  const token = await user.generateAuthToken();
+  const token = await user.generateAuthToken(res);
   const leanUser = user.toLeanDocument();
   res.status(201).send({ leanUser, token });
 });
@@ -72,8 +72,12 @@ export const uploadUserPhoto =
  * @throws {Error} If the user credentials are invalid.
  */
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
-  const user = await User.findByCredentials(req.body.username, req.body.password);
-  const token = await user.generateAuthToken();
+  const user = await User.findByCredentials(req.body?.email, req.body.password);
+  if (!user) {
+    res.status(401).send({ error: 'Invalid email or password' });
+    return;
+  }
+  const token = await user.generateAuthToken(res);
   const leanUser = user.toLeanDocument();
   res.send({ user: leanUser, token });
 });

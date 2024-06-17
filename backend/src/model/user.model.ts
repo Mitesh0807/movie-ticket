@@ -2,6 +2,7 @@ import mongoose, { Document, Schema, Model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Response } from 'express';
 
 export interface IUserDocument extends Document {
   _id: string;
@@ -16,7 +17,7 @@ export interface IUserDocument extends Document {
   createdAt: Date;
   updatedAt: Date;
   toLeanDocument(): LeanUserDocument;
-  generateAuthToken(): Promise<string>;
+  generateAuthToken(res: Response): Promise<string>;
 }
 
 interface LeanUserDocument {
@@ -110,16 +111,24 @@ userSchema.methods.toLeanDocument = function (this: IUserDocument): LeanUserDocu
   return userObject as LeanUserDocument;
 };
 
+
 /**
- * Generates an authentication token for the user.
+ * Generates an authentication token for the user and sets it as a cookie.
  *
- * @return {Promise<string>} The generated authentication token.
+ * @param {express.Response} res - The response object.
+ * @return {Promise<void>} Returns a promise that resolves when the token is set as a cookie.
  */
-userSchema.methods.generateAuthToken = async function (this: IUserDocument): Promise<string> {
-  const token = jwt.sign({ _id: this._id.toString() }, 'mySecret');
+userSchema.methods.generateAuthToken = async function (this: IUserDocument, res: Response): Promise<void> {
+  const token = jwt.sign({ _id: this._id.toString() }, 'mySecret', { expiresIn: 180000 });
   this.tokens = this.tokens.concat({ token });
   await this.save();
-  return token;
+
+  res.cookie('token', token, {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    maxAge: 180000,
+  });
 };
 
 /**
@@ -129,8 +138,8 @@ userSchema.methods.generateAuthToken = async function (this: IUserDocument): Pro
  * @param {string} password - The password of the user.
  * @return {Promise<IUserDocument>} The user document if credentials are valid.
  */
-userSchema.statics.findByCredentials = async function (username: string, password: string): Promise<IUserDocument> {
-  const user = await this.findOne({ username });
+userSchema.statics.findByCredentials = async function (email: string, password: string): Promise<IUserDocument> {
+  const user = await this.findOne({ email: email });
   if (!user) {
     throw new Error('Unable to login');
   }
