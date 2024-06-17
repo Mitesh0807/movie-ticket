@@ -15,10 +15,11 @@ import upload from '@/utils/multer';
  */
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const { role, ...userData } = req.body;
+
   if (role) {
+    logger.error('You cannot set the role property.');
     throw new Error('You cannot set the role property.');
   }
-
   const user = new User(userData);
   await user.save();
   const token = await user.generateAuthToken(res);

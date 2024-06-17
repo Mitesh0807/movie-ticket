@@ -34,6 +34,13 @@ interface IUserModel extends Model<IUserDocument> {
   findByCredentials(username: string, password: string): Promise<IUserDocument>;
 }
 
+/**
+  validate: {
+        validator: (value: string) => validator.isMobilePhone(value),
+        message: 'Phone number is invalid',
+      },
+ */
+
 const userSchema = new Schema<IUserDocument, IUserModel>(
   {
     fullName: {
@@ -75,12 +82,8 @@ const userSchema = new Schema<IUserDocument, IUserModel>(
     },
     phoneNumber: {
       type: String,
-      unique: true,
       trim: true,
-      validate: {
-        validator: (value: string) => validator.isMobilePhone(value),
-        message: 'Phone number is invalid',
-      },
+      required: true,
     },
     imageUrl: String,
     tokens: [

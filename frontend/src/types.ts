@@ -75,3 +75,12 @@ export interface AuthResponse {
   user: IUser;
   token: string;
 }
+
+
+export interface SignupPayload {
+  username: string;
+  email: string;
+  password: string;
+  fullName: string;
+  phoneNumber: string;
+}

@@ -1,4 +1,4 @@
-import { LoginPayload } from '@/types';
+import { LoginPayload, SignupPayload } from '@/types';
 import api from '@/utils/api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -14,3 +14,12 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async () => {
   await axios.post(`${'users'}/logout`);
 });
+
+
+export const signUp = createAsyncThunk(
+  'auth/signup',
+  async (credentials: SignupPayload) => {
+    const response = await api.post(`${'users'}/`, credentials);
+    return response.data;
+  }
+)
