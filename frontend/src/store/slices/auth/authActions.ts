@@ -19,6 +19,11 @@ export const me = createAsyncThunk("auth/me", async () => {
   return response.data;
 });
 
+export const admin = createAsyncThunk("auth/isAdmin", async () => {
+  const response = await api.get(`${"users"}/isAdmin`);
+  return response.data;
+});
+
 export const signUp = createAsyncThunk(
   "auth/signup",
   async (credentials: SignupPayload) => {

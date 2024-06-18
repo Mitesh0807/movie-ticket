@@ -3,7 +3,7 @@ import { MovieSchema } from "@/schema/MovieSchema";
 import { GenreSchema } from "@/schema/GenreSchema";
 
 export type MoviePayload = z.infer<typeof MovieSchema>;
-export type GenrePayload =z.infer<typeof GenreSchema>
+export type GenrePayload = z.infer<typeof GenreSchema>;
 export interface IMovie {
   _id?: string;
   title: string;
@@ -35,7 +35,6 @@ export interface IGenre {
   description?: string;
 }
 
-// types.ts
 export interface IReservation {
   _id?: string;
   date: Date;
@@ -58,11 +57,17 @@ export interface IShowtime {
   cinemaId: string;
 }
 
-// types.ts
 export interface IUser {
-  id: string;
-  name: string;
+  _id: string;
+  fullName: string;
+  username: string;
   email: string;
+  role: string;
+  phoneNumber: string;
+  tokens: Array<{ token: string; _id: string }>;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface AuthState {
@@ -70,6 +75,7 @@ export interface AuthState {
   token: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  isAdmin: boolean;
 }
 
 export interface LoginPayload {

@@ -21,6 +21,7 @@ router.post('/users/logoutAll', authenticateUser, logoutUser);
 router.post('/users/upload', authenticateUser, uploadUserPhoto);
 router.post('/users/delete', authenticateUser, deleteUserAccount);
 router.get('/users/me', authenticateUser, userInfo);
+router.get('/users/isAdmin', requireSuperadmin, userInfo);
 router.get('/users', requireSuperadmin, getAllUsers);
 router.get('/users/:id', authenticateUser, getCurrentUser);
 router.patch('/users/:id', updateUser);

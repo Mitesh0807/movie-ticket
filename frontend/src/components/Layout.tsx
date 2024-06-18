@@ -46,7 +46,7 @@ function Layout() {
           <div className="flex items-center gap-2">
             <Avatar className="w-8 h-8 border">
               <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>{userDetails?.name}</AvatarFallback>
+              <AvatarFallback>{userDetails?.fullName}</AvatarFallback>
             </Avatar>
             <Link
               to={"/reservations"}

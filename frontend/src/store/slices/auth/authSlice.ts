@@ -1,6 +1,6 @@
 // authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { login, logout, me } from "./authActions";
+import { login, logout, me, admin } from "./authActions";
 import { AuthState, IUser } from "@/types";
 
 const initialState: AuthState = {
@@ -8,6 +8,7 @@ const initialState: AuthState = {
   token: null,
   status: "idle",
   error: null,
+  isAdmin: false,
 };
 
 const authSlice = createSlice({
@@ -24,6 +25,7 @@ const authSlice = createSlice({
         (state, action: PayloadAction<{ user: IUser; token: string }>) => {
           state.status = "succeeded";
           state.user = action.payload.user;
+          state.isAdmin = action.payload.user.role === "superadmin";
           state.token = action.payload.token;
         }
       )
@@ -45,6 +47,20 @@ const authSlice = createSlice({
       })
       .addCase(me.rejected, (state, action) => {
         state.status = "failed";
+        state.error =
+          action.error.message || "Failed to varify user please login again";
+      })
+      .addCase(admin.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(admin.fulfilled, (state, action: PayloadAction<IUser>) => {
+        state.user = action.payload;
+        state.isAdmin = true;
+        state.status = "idle";
+      })
+      .addCase(admin.rejected, (state, action) => {
+        state.status = "failed";
+        state.isAdmin = false;
         state.error =
           action.error.message || "Failed to varify user please login again";
       });
