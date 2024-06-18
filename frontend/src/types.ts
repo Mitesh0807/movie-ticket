@@ -57,6 +57,8 @@ export interface IShowtime {
   endDate: Date;
   movieId: IMovie;
   cinemaId: ICinema;
+  seats: Array<Array<number>>;
+  seatsAvailable: number;
 }
 
 export interface IUser {

@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { fetchMovies } from "@/store/slices/movies/movieActions";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, ClockIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Component() {
   const movies = useAppSelector((state) => state.movies.movies);
@@ -98,7 +99,9 @@ export default function Component() {
                       <span>{movie.releaseDate?.toString()}</span>
                     </div>
                     <div className="flex gap-2 mt-4">
-                      <Button className="flex-1">Buy Tickets</Button>
+                      <Link className="flex-1" to={`/showtimes/${movie._id}`}>
+                        Buy Tickets
+                      </Link>
                       <Button variant="outline" className="flex-1">
                         Trailer
                       </Button>

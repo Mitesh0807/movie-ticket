@@ -1,4 +1,3 @@
-// src/main.tsx
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import "@/index.css";
@@ -8,12 +7,14 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "@/components/Layout";
 import Loading from "@/components/ui/Loading";
 import AdminLayout from "@/components/Admin/AdminLayout";
+import ErrorPage from "@/error-page";
+import SeatSelection from "./components/ui/seatselection";
 
 const Dashboard = lazy(() => import("@/components/Pages/Dashboard"));
 const Login = lazy(() => import("@/components/Login"));
 const Signup = lazy(() => import("@/components/Signup.tsx"));
-const ErrorPage = lazy(() => import("@/error-page"));
 const Reservation = lazy(() => import("@/components/Pages/Reservation"));
+const Showtime = lazy(() => import("@/components/Pages/Showtime"));
 
 /* Admin */
 const MovieForm = lazy(() => import("@/components/Admin/CreateMovie"));
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         <Layout />
       </Suspense>
     ),
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -36,10 +38,25 @@ const router = createBrowserRouter([
             <Dashboard />
           </Suspense>
         ),
-        errorElement: <ErrorPage />,
       },
       {
-        path: "/reservations",
+        path: "seat-selection/:id",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <SeatSelection />
+          </Suspense>
+        ),
+      },
+      {
+        path: "showtimes/:id",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Showtime />
+          </Suspense>
+        ),
+      },
+      {
+        path: "reservations",
         element: (
           <Suspense fallback={<Loading />}>
             <Reservation />
@@ -47,22 +64,20 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/login",
+        path: "login",
         element: (
           <Suspense fallback={<Loading />}>
             <Login />
           </Suspense>
         ),
-        errorElement: <ErrorPage />,
       },
       {
-        path: "/signup",
+        path: "signup",
         element: (
           <Suspense fallback={<Loading />}>
             <Signup />
           </Suspense>
         ),
-        errorElement: <ErrorPage />,
       },
     ],
   },
@@ -73,6 +88,7 @@ const router = createBrowserRouter([
         <AdminLayout />
       </Suspense>
     ),
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "movie/create",
@@ -81,7 +97,6 @@ const router = createBrowserRouter([
             <MovieForm />
           </Suspense>
         ),
-        errorElement: <ErrorPage />,
       },
       {
         path: "genre/create",
@@ -90,7 +105,6 @@ const router = createBrowserRouter([
             <GenreForm />
           </Suspense>
         ),
-        errorElement: <ErrorPage />,
       },
       {
         path: "genre/edit/:id",
@@ -99,7 +113,6 @@ const router = createBrowserRouter([
             <EditGenreForm />
           </Suspense>
         ),
-        errorElement: <ErrorPage />,
       },
     ],
   },

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Reservation from '@/model/reservation.model';
+import Showtime from '@/model/showtime.model';
 
 /*
 TODO: Some functionality needs to corrected here like current user can checkin only their reservations
@@ -20,8 +21,34 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
     res.status(401).send('Unauthorized');
     return;
   }
-
+  const showtimeId = req.body?.showtimeId;
+  if (!showtimeId) {
+    res.status(400).send('Showtime ID is required');
+    return;
+  }
+  const showtime = await Showtime.findById(showtimeId);
+  if (!showtime) {
+    res.status(404).send('Showtime not found');
+    return;
+  }
+  const seats = req.body?.seats;
+  if (!seats) {
+    res.status(400).send('Seats are required');
+    return;
+  }
+  let count = 0;
+  for (let i = 0; i < seats.length; i++) {
+    for (let j = 0; j < seats[i].length; j++) {
+      if (seats[i][j] === 1) {
+        count++;
+      }
+    }
+  }
+  showtime.seatsAvailable = showtime.seatsAvailable - count;
+  showtime.seats = seats;
+  await showtime.save();
   const reservation = new Reservation(req.body);
+
   try {
     await reservation.save();
     res.status(201).send({ reservation });

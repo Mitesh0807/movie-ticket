@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import Showtime from '@/model/showtime.model';
-
+import Cinema from '@/model/cinema.model';
+import logger from '@/utils/logger';
+import mongoose from 'mongoose';
 
 /**
  * Creates a new showtime.
@@ -10,7 +12,19 @@ import Showtime from '@/model/showtime.model';
  * @return {Promise<void>} A promise that resolves when the showtime is created and sent in the response, or rejects with an error if there was a problem creating the showtime.
  */
 export const createShowtime = async (req: Request, res: Response): Promise<void> => {
-  const showtime = new Showtime(req.body);
+  const { cinemaId } = req.body;
+  const cinema = await Cinema.findOne({ _id: cinemaId });
+  if (!cinema) {
+    res.status(404).send('Cinema not found');
+    return;
+  }
+  const seats = cinema.seats;
+  if (!seats) {
+    res.status(400).send('Seats are required');
+    return;
+  }
+  const seatsAvailable: number = seats.length * seats[0].length;
+  const showtime = new Showtime({ ...req.body, seatsAvailable, seats });
   try {
     await showtime.save();
     res.status(201).send(showtime);
@@ -18,7 +32,6 @@ export const createShowtime = async (req: Request, res: Response): Promise<void>
     res.status(400).send(e);
   }
 };
-
 
 /**
  * Retrieves all showtimes.
@@ -36,6 +49,23 @@ export const getAllShowtimes = async (req: Request, res: Response): Promise<void
   }
 };
 
+export const getShowtimesByCinemaId = async (req: Request, res: Response): Promise<void> => {
+  const _id = req.params.id;
+  if (!_id) {
+    res.sendStatus(400);
+    return;
+  }
+  logger.info(_id);
+  try {
+    const showtimes = await Showtime.find({ movieId: new mongoose.Types.ObjectId(_id) })
+      .populate('movieId')
+      .populate('cinemaId');
+
+    res.send(showtimes);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
 
 /**
  * Retrieves a showtime by its ID.
@@ -47,7 +77,7 @@ export const getAllShowtimes = async (req: Request, res: Response): Promise<void
 export const getShowtimeById = async (req: Request, res: Response): Promise<void> => {
   const _id = req.params.id;
   try {
-    const showtime = await Showtime.findById(_id);
+    const showtime = await Showtime.findById(_id).populate('movieId').populate('cinemaId');
     if (!showtime) {
       res.sendStatus(404);
       return;
@@ -92,7 +122,6 @@ export const updateShowtimeById = async (req: Request, res: Response): Promise<v
     res.status(400).send(e);
   }
 };
-
 
 /**
  * Deletes a showtime by its ID.

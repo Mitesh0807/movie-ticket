@@ -6,6 +6,8 @@ export interface IShowtime extends Document {
   endDate: Date;
   movieId: mongoose.Types.ObjectId;
   cinemaId: mongoose.Types.ObjectId;
+  seats: Array<Array<number>>;
+  seatsAvailable: number;
 }
 
 const showtimeSchema: Schema = new Schema({
@@ -30,6 +32,14 @@ const showtimeSchema: Schema = new Schema({
   cinemaId: {
     type: Schema.Types.ObjectId,
     ref: 'Cinema',
+    required: true,
+  },
+  seats: {
+    type: [Schema.Types.Mixed],
+    required: true,
+  },
+  seatsAvailable: {
+    type: Number,
     required: true,
   },
 });
