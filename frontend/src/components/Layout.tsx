@@ -1,12 +1,15 @@
 import { Link, Outlet } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { SVGProps } from "react";
-import { useAppSelector } from "@/store/store";
+import { SVGProps, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { me } from "@/store/slices/auth/authActions";
 
-
-
-function Layout( ) {
-  const userDetails =useAppSelector((state)=>state.auth.user);
+function Layout() {
+  const userDetails = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(me());
+  }, []);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">

@@ -4,7 +4,6 @@ import logger from '@/utils/logger';
 import asyncHandler from 'express-async-handler';
 import upload from '@/utils/multer';
 
-
 /**
  * Creates a new user.
  *
@@ -26,7 +25,6 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const leanUser = user.toLeanDocument();
   res.status(201).send({ leanUser, token });
 });
-
 
 /**
  * Uploads a user photo.
@@ -62,7 +60,6 @@ export const uploadUserPhoto =
       res.sendStatus(400);
     }
   }));
-
 
 /**
  * Logs in a user.
@@ -149,7 +146,6 @@ export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   res.send(users);
 });
 
-
 /**
  * Retrieves the current user from the request and sends a response with the user object.
  *
@@ -161,7 +157,7 @@ export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
  */
 export const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
   const leanUser = req.user?.toLeanDocument();
-    res.send({ user: leanUser });
+  res.send({ user: leanUser });
 });
 
 /**
@@ -257,8 +253,8 @@ export const updateUserById = asyncHandler(async (req: Request, res: Response) =
       res.sendStatus(404);
       return;
     }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     updates.forEach((update) => (user[update] = req.body[update]));
     await user.save();
     res.send(user);
@@ -317,3 +313,14 @@ export const deleteUserAccount = asyncHandler(async (req: Request, res: Response
   }
 });
 
+export const userInfo = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      res.sendStatus(401);
+      return;
+    }
+    res.send(req.user?.toLeanDocument());
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
