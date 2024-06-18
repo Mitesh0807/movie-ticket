@@ -3,13 +3,14 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IReservation extends Document {
   date: Date;
   startAt: string;
-  seats: any[];
+  seats: number[][];
   ticketPrice: number;
   total: number;
   showtimeId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   phone: string;
   checkin: boolean;
+  seatsSelected: number[][];
 }
 
 const reservationSchema: Schema = new Schema({

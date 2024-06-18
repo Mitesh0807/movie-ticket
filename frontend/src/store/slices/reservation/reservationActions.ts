@@ -36,3 +36,19 @@ export const deleteReservation = createAsyncThunk(
     return id;
   }
 );
+
+export const checkinReservation = createAsyncThunk(
+  "reservations/checkin",
+  async (id: string) => {
+    const response = await api.put(`${"reservations"}/${id}/checkin`);
+    return response.data;
+  }
+);
+
+export const cancelReservation = createAsyncThunk(
+  "reservations/cancel",
+  async (id: string) => {
+    const response = await api.get(`${"reservations"}/cancel/${id}`);
+    return response.data;
+  }
+);

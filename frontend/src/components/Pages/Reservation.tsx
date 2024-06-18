@@ -10,8 +10,13 @@ import {
 } from "@/components/ui/table";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect } from "react";
-import { fetchReservations } from "@/store/slices/reservation/reservationActions";
+import {
+  cancelReservation,
+  deleteReservation,
+  fetchReservations,
+} from "@/store/slices/reservation/reservationActions";
 import dayjs from "dayjs";
+import { Button } from "../ui/button";
 
 const currentDate = new Date();
 
@@ -22,6 +27,13 @@ export default function Reservation() {
     dispatch(fetchReservations());
   }, []);
   console.log(tickets, "tickets");
+
+  const handleOnCanelClick = (id: string) => {
+    dispatch(cancelReservation(id))
+      .unwrap()
+      .then(() => dispatch(fetchReservations()))
+      .catch((e) => console.log(e));
+  };
   return (
     <>
       <section className="mb-8">
@@ -63,6 +75,12 @@ export default function Reservation() {
                           Venue
                         </p>
                         <p>{ticket?.showtimeId?.cinemaId?.name}</p>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleOnCanelClick(ticket?._id)}
+                        >
+                          Cancel
+                        </Button>
                       </div>
                     </div>
                   </CardContent>

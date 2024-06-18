@@ -43,6 +43,10 @@ export default function SeatSelection() {
   };
 
   const handleConfirmClick = () => {
+    if (!selectedSeats?.length) {
+      alert("Please select at least one seat");
+      return;
+    }
     if (!showTime) return;
     const payload = {
       showtimeId: showTime._id,
@@ -74,24 +78,41 @@ export default function SeatSelection() {
               {showTime.startAt}
             </p>
           </div>
-          <div className="grid grid-cols-6 gap-2">
-            {seatsGrid.map((row, rowIndex) =>
-              row.map((seat, colIndex) => (
+          <div className="grid grid-cols-[auto,repeat(6,1fr)] gap-2">
+            <div />
+            {Array.from({ length: seatsGrid[0]?.length }, (_, index) => (
+              <div
+                key={`col-${index}`}
+                className="flex justify-center items-center font-semibold"
+              >
+                {index + 1}
+              </div>
+            ))}
+            {seatsGrid.map((row, rowIndex) => (
+              <>
                 <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className={`w-10 h-10 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
-                    seat === 1
-                      ? "bg-green-500 text-white hover:bg-green-600"
-                      : seat === 0
-                      ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
-                  }`}
-                  onClick={() => handleSeatClick(rowIndex, colIndex)}
+                  key={`row-label-${rowIndex}`}
+                  className="flex justify-center items-center font-semibold"
                 >
-                  {seat === 1 ? "X" : ""}
+                  {String.fromCharCode(65 + rowIndex)}
                 </div>
-              ))
-            )}
+                {row.map((seat, colIndex) => (
+                  <div
+                    key={`${rowIndex}-${colIndex}`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
+                      seat === 1
+                        ? "bg-green-500 text-white hover:bg-green-600"
+                        : seat === 0
+                        ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
+                    onClick={() => handleSeatClick(rowIndex, colIndex)}
+                  >
+                    {seat === 1 ? "X" : ""}
+                  </div>
+                ))}
+              </>
+            ))}
           </div>
           <div className="mt-6 text-center">
             <Button variant="default" onClick={handleConfirmClick}>

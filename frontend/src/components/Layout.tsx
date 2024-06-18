@@ -38,10 +38,10 @@ function Layout() {
             Promotions
           </Link>
           <Link
-            to={"/"}
+            to={"/login"}
             className="text-sm font-medium hover:underline underline-offset-4"
           >
-            About
+            Login
           </Link>
           <div className="flex items-center gap-2">
             <Avatar className="w-8 h-8 border">

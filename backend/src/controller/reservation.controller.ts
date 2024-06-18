@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Reservation from '@/model/reservation.model';
 import Showtime from '@/model/showtime.model';
+import logger from '@/utils/logger';
 
 /*
 TODO: Some functionality needs to corrected here like current user can checkin only their reservations
@@ -190,6 +191,49 @@ export const deleteReservationById = async (req: Request, res: Response): Promis
     }
     const removedReservation = await Reservation.findByIdAndDelete(_id);
     res.send(reservation);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+export const cancelReservationById = async (req: Request, res: Response): Promise<void> => {
+  const _id = req.params.id;
+  try {
+    const reservation = await Reservation.findById(_id);
+    if (!reservation) {
+      res.sendStatus(404);
+      return;
+    }
+    if (reservation.userId.toString() !== req.user?._id.toString()) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+    if (reservation.checkin) {
+      res.status(400).send('Reservation already checked in');
+      return;
+    }
+    const userSeats = reservation.seatsSelected;
+    const showtime = await Showtime.findById(reservation.showtimeId);
+    if (!showtime) {
+      res.sendStatus(404);
+      return;
+    }
+    logger.info(showtime.seats);
+    logger.info(userSeats);
+    for (const seat of userSeats) {
+      // logger.info(seat);
+      logger.info(showtime.seats[seat[0]][seat[1]]);
+      showtime.seats[seat[0]][seat[1]] = 0;
+      showtime.seats = [...showtime.seats];
+    }
+    showtime.seatsAvailable += userSeats.length;
+    const updatedShowtime = await Showtime.findByIdAndUpdate(reservation.showtimeId, showtime, {
+      new: true,
+    });
+
+    logger.info(updatedShowtime);
+    const deletedReservation = await Reservation.findByIdAndDelete(_id);
+    res.send(deletedReservation);
   } catch (e) {
     res.status(400).send(e);
   }
