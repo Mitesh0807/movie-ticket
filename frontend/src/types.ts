@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { MovieSchema } from "@/schema/MovieSchema";
+import { GenreSchema } from "@/schema/GenreSchema";
 
 export type MoviePayload = z.infer<typeof MovieSchema>;
-
+export type GenrePayload =z.infer<typeof GenreSchema>
 export interface IMovie {
   _id?: string;
   title: string;

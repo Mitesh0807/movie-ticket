@@ -7,15 +7,13 @@ import {
 } from "@/components/ui/carousel";
 import { SVGProps, useEffect, useState } from "react";
 import { useAppDispatch } from "@/store/store";
-import { IGenre, IMovie } from "@/types";
+import { IMovie } from "@/types";
 import { fetchMovies } from "@/store/slices/movies/movieActions";
-import { fetchGenres } from "@/store/slices/genres/genreActions";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { CalendarIcon, ClockIcon } from "lucide-react";
 
 export default function Component() {
   const [movies, setMovies] = useState<IMovie[]>([]);
-  const [genres, setGenres] = useState<IGenre[]>([]);
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -26,15 +24,6 @@ export default function Component() {
       })
       .catch((error) => {
         console.log(error);
-      });
-
-    dispatch(fetchGenres())
-      .unwrap()
-      .then((data) => {
-        setGenres(data);
-      })
-      .catch((error) => {
-        console.log(error, "error");
       });
     return () => {};
   }, []);
@@ -93,10 +82,36 @@ export default function Component() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-            
-              {movies &&
-                movies.map((movie) => (
-                    <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
+            {movies &&
+              movies.map((movie) => (
+                <>
+                  <div className="bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden">
+                    <img
+                      src={movie.image}
+                      width="400"
+                      height="600"
+                      alt="Movie Poster"
+                      className="w-full h-[500px] object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="text-xl font-bold">{movie.title}</h3>
+                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
+                        <ClockIcon className="w-4 h-4" />
+                        <span>{movie?.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-1">
+                        <CalendarIcon className="w-4 h-4" />
+                        <span>{movie.releaseDate?.toString()}</span>
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <Button className="flex-1">Buy Tickets</Button>
+                        <Button variant="outline" className="flex-1" >
+                          Trailer
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
                     <img
                       src={movie.image}
                       width="400"
@@ -115,10 +130,11 @@ export default function Component() {
                         </Button>
                       </div>
                     </div>
-                  </div>
-                ))}
-            </div>
+                  </div> */}
+                </>
+              ))}
           </div>
+        </div>
       </section>
     </>
   );

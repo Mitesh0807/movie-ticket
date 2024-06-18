@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IGenre } from '../../../types';
+import { GenrePayload, IGenre } from '@/types';
 import api from '@/utils/api';
 
 export const fetchGenres = createAsyncThunk('genres/fetchAll', async () => {
@@ -7,7 +7,7 @@ export const fetchGenres = createAsyncThunk('genres/fetchAll', async () => {
   return response.data;
 });
 
-export const createGenre = createAsyncThunk('genres/create', async (genre: IGenre) => {
+export const createGenre = createAsyncThunk('genres/create', async (genre: GenrePayload) => {
   const response = await api.post('/genres', genre);
   return response.data;
 });

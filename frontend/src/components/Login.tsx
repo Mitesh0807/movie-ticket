@@ -2,7 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SVGProps } from "react";
 import { JSX } from "react/jsx-runtime";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -13,6 +13,7 @@ import { login } from "@/store/slices/auth/authActions";
 import { useAppDispatch } from "@/store/store";
 
 export default function Login() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -24,7 +25,14 @@ export default function Login() {
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<LoginPayload> = (data) => {
-    dispatch(login(data));
+    dispatch(login(data))
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      })
+      .catch((e) => {
+        console.log(e, "error");
+      });
   };
   return (
     <div className="flex min-h-screen items-center justify-center">

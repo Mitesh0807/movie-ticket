@@ -1,4 +1,3 @@
-// src/components/MovieForm.tsx
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { createMovie } from "@/store/slices/movies/movieActions";
 import { fetchGenres } from "@/store/slices/genres/genreActions";
-import { Combobox } from "./combox";
+import { Combobox } from "@/components/ui/combox";
 
 export default function MovieForm() {
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
