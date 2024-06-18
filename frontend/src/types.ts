@@ -1,3 +1,8 @@
+import { z } from "zod";
+import { MovieSchema } from "@/schema/MovieSchema";
+
+export type MoviePayload = z.infer<typeof MovieSchema>;
+
 export interface IMovie {
   _id?: string;
   title: string;
@@ -34,7 +39,7 @@ export interface IReservation {
   _id?: string;
   date: Date;
   startAt: string;
-  seats: unknown[]; 
+  seats: unknown[];
   ticketPrice: number;
   total: number;
   showtimeId: string;
@@ -62,7 +67,7 @@ export interface IUser {
 export interface AuthState {
   user: IUser | null;
   token: string | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
@@ -75,7 +80,6 @@ export interface AuthResponse {
   user: IUser;
   token: string;
 }
-
 
 export interface SignupPayload {
   username: string;

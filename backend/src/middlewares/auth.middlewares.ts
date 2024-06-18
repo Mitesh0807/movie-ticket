@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '@/model/user.model';
-
-
+import logger from '@/utils/logger';
 
 /**
  * Middleware function to authenticate a user based on a token in the request header.
@@ -14,7 +13,7 @@ import User from '@/model/user.model';
  */
 const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req['cookies']['token'];
     if (!token) {
       throw new Error('Authentication failed');
     }
@@ -45,8 +44,9 @@ const authenticateUser = async (req: Request, res: Response, next: NextFunction)
  */
 const requireSuperadmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req['cookies']['token'];
     if (!token) {
+      logger.info('token not found', 'error');
       throw new Error('Authentication failed');
     }
     const decoded = jwt.verify(token, 'mySecret') as { _id: string };
@@ -61,6 +61,7 @@ const requireSuperadmin = async (req: Request, res: Response, next: NextFunction
     req.user = user;
     next();
   } catch (e) {
+    logger.error(JSON.stringify(e) + 'error');
     res.status(401).send({ error: 'Please authenticate as a superadmin.' });
   }
 };

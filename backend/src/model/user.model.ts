@@ -114,7 +114,6 @@ userSchema.methods.toLeanDocument = function (this: IUserDocument): LeanUserDocu
   return userObject as LeanUserDocument;
 };
 
-
 /**
  * Generates an authentication token for the user and sets it as a cookie.
  *
@@ -122,7 +121,7 @@ userSchema.methods.toLeanDocument = function (this: IUserDocument): LeanUserDocu
  * @return {Promise<void>} Returns a promise that resolves when the token is set as a cookie.
  */
 userSchema.methods.generateAuthToken = async function (this: IUserDocument, res: Response): Promise<void> {
-  const token = jwt.sign({ _id: this._id.toString() }, 'mySecret', { expiresIn: 180000 });
+  const token = jwt.sign({ _id: this._id.toString() }, 'mySecret', { expiresIn: 180000000 });
   this.tokens = this.tokens.concat({ token });
   await this.save();
 
@@ -130,7 +129,7 @@ userSchema.methods.generateAuthToken = async function (this: IUserDocument, res:
     httpOnly: true,
     sameSite: 'none',
     secure: true,
-    maxAge: 180000,
+    maxAge: 180000000,
   });
 };
 

@@ -6,6 +6,7 @@ import store from "@/store/store.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "@/components/Layout";
 import Loading from "./components/ui/Loading";
+import MovieForm from "./components/Admin/CreateMovie";
 
 const Dashboard = lazy(() => import("@/components/Pages/Dashboard"));
 const Login = lazy(() => import("@/components/Login"));
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <Suspense fallback={<Loading />}>
-            <Dashboard />
+            <MovieForm />
           </Suspense>
         ),
         errorElement: <ErrorPage />,
