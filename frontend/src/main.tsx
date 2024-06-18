@@ -8,13 +8,13 @@ import Layout from "@/components/Layout";
 import Loading from "@/components/ui/Loading";
 import AdminLayout from "@/components/Admin/AdminLayout";
 import ErrorPage from "@/error-page";
-import SeatSelection from "./components/ui/seatselection";
 
 const Dashboard = lazy(() => import("@/components/Pages/Dashboard"));
 const Login = lazy(() => import("@/components/Login"));
 const Signup = lazy(() => import("@/components/Signup.tsx"));
 const Reservation = lazy(() => import("@/components/Pages/Reservation"));
 const Showtime = lazy(() => import("@/components/Pages/Showtime"));
+const SeatSelection = lazy(() => import("@/components/Pages/SeatSelecation"));
 
 /* Admin */
 const MovieForm = lazy(() => import("@/components/Admin/CreateMovie"));

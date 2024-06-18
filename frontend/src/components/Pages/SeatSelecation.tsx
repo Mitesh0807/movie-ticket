@@ -2,16 +2,18 @@ import { fetchShowtimeById } from "@/store/slices/showtime/showtimeActions";
 import { useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { createReservation } from "@/store/slices/reservation/reservationActions";
 
 export default function SeatSelection() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const showTime = useAppSelector((state) => state.showtime.selectedShowtime);
   const { id } = useParams<{ id: string }>();
-  const [selectedSeats, setSelectedSeats] = useState([]);
-
+  const [selectedSeats, setSelectedSeats] = useState<number[][]>([]);
   const [seatsGrid, setSeatsGrid] = useState<number[][]>([]);
-  console.log(showTime);
+
   useEffect(() => {
     if (id) dispatch(fetchShowtimeById(id));
   }, [id, dispatch]);
@@ -20,21 +22,60 @@ export default function SeatSelection() {
     if (showTime) {
       setSeatsGrid(structuredClone(showTime.seats));
     }
-  }, [showTime, id]);
+  }, [showTime]);
 
-  const handleSeatClick = (row, col) => {
-    console.log(row, col);
+  const handleSeatClick = (row: number, col: number) => {
     const updatedGrid = [...seatsGrid];
     updatedGrid[row][col] = updatedGrid[row][col] === 0 ? 2 : 0;
     setSeatsGrid(updatedGrid);
+
+    const seatIndex = selectedSeats.findIndex(
+      (seat) => seat[0] === row && seat[1] === col
+    );
+
+    if (seatIndex > -1) {
+      setSelectedSeats((prev) =>
+        prev.filter((seat, index) => index !== seatIndex)
+      );
+    } else {
+      setSelectedSeats((prev) => [...prev, [row, col]]);
+    }
   };
+
+  const handleConfirmClick = () => {
+    if (!showTime) return;
+    const payload = {
+      showtimeId: showTime._id,
+      seats: seatsGrid.map((row) => row.map((seat) => (seat === 2 ? 1 : seat))),
+      seatsSelected: selectedSeats,
+      total: showTime.cinemaId.ticketPrice * selectedSeats.length,
+      ticketPrice: showTime.cinemaId.ticketPrice,
+      startAt: showTime.startAt,
+    };
+
+    //TODO: Add error handling and typings
+
+    dispatch(createReservation(payload))
+      .unwrap()
+      .then(() => navigate("/reservations"))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <div className="bg-gray-200 dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-        <div className="grid grid-cols-7 gap-2">
-          {seatsGrid &&
-            seatsGrid.length > 0 &&
-            seatsGrid.map((row, rowIndex) =>
+      {showTime && (
+        <div className="bg-gray-200 dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-2xl">
+          <div className="mb-6 text-center">
+            <h2 className="text-2xl font-bold">{showTime.movieId.title}</h2>
+            <p className="text-gray-700 dark:text-gray-300">
+              {showTime.cinemaId.name}
+            </p>
+            <p className="text-gray-700 dark:text-gray-300">
+              {showTime.startAt}
+            </p>
+          </div>
+          <div className="grid grid-cols-6 gap-2">
+            {seatsGrid.map((row, rowIndex) =>
               row.map((seat, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
@@ -51,8 +92,14 @@ export default function SeatSelection() {
                 </div>
               ))
             )}
+          </div>
+          <div className="mt-6 text-center">
+            <Button variant="default" onClick={handleConfirmClick}>
+              Confirm Selection
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

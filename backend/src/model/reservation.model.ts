@@ -15,6 +15,7 @@ export interface IReservation extends Document {
 const reservationSchema: Schema = new Schema({
   date: {
     type: Date,
+    default: Date.now,
     required: true,
   },
   startAt: {
@@ -23,6 +24,10 @@ const reservationSchema: Schema = new Schema({
     trim: true,
   },
   seats: {
+    type: [Schema.Types.Mixed],
+    required: true,
+  },
+  seatsSelected: {
     type: [Schema.Types.Mixed],
     required: true,
   },
@@ -46,7 +51,6 @@ const reservationSchema: Schema = new Schema({
   },
   phone: {
     type: String,
-    required: true,
   },
   checkin: {
     type: Boolean,

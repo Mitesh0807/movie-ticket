@@ -13,7 +13,7 @@ export const fetchReservations = createAsyncThunk(
 export const createReservation = createAsyncThunk(
   "reservations/create",
   async (reservation: IReservation) => {
-    const response = await api.post("", reservation);
+    const response = await api.post("reservations", reservation);
     return response.data;
   }
 );
@@ -21,7 +21,10 @@ export const createReservation = createAsyncThunk(
 export const updateReservation = createAsyncThunk(
   "reservations/update",
   async (reservation: IReservation) => {
-    const response = await api.put(`${""}/${reservation._id}`, reservation);
+    const response = await api.put(
+      `${"reservations"}/${reservation._id}`,
+      reservation
+    );
     return response.data;
   }
 );
@@ -29,7 +32,7 @@ export const updateReservation = createAsyncThunk(
 export const deleteReservation = createAsyncThunk(
   "reservations/delete",
   async (id: string) => {
-    await api.delete(`${""}/${id}`);
+    await api.delete(`${"reservations"}/${id}`);
     return id;
   }
 );

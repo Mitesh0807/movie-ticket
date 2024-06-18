@@ -17,10 +17,6 @@ cancel can be done only by superadmin or may be with some other role like admin 
  * @return {Promise<void>} A promise that resolves when the reservation is created.
  */
 export const createReservation = async (req: Request, res: Response): Promise<void> => {
-  if (req.body?.userId !== req.user?._id) {
-    res.status(401).send('Unauthorized');
-    return;
-  }
   const showtimeId = req.body?.showtimeId;
   if (!showtimeId) {
     res.status(400).send('Showtime ID is required');
@@ -47,7 +43,7 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
   showtime.seatsAvailable = showtime.seatsAvailable - count;
   showtime.seats = seats;
   await showtime.save();
-  const reservation = new Reservation(req.body);
+  const reservation = new Reservation({ ...req.body, userId: req.user?._id });
 
   try {
     await reservation.save();
