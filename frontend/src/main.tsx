@@ -13,6 +13,7 @@ const Dashboard = lazy(() => import("@/components/Pages/Dashboard"));
 const Login = lazy(() => import("@/components/Login"));
 const Signup = lazy(() => import("@/components/Signup.tsx"));
 const ErrorPage = lazy(() => import("@/error-page"));
+const Reservation = lazy(() => import("@/components/Pages/Reservation"));
 
 /* Admin */
 const MovieForm = lazy(() => import("@/components/Admin/CreateMovie"));
@@ -36,6 +37,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
         errorElement: <ErrorPage />,
+      },
+      {
+        path: "/reservations",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Reservation />
+          </Suspense>
+        ),
       },
       {
         path: "/login",

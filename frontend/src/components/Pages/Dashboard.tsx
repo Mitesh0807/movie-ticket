@@ -5,26 +5,19 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { SVGProps, useEffect, useState } from "react";
-import { useAppDispatch } from "@/store/store";
-import { IMovie } from "@/types";
+import { SVGProps, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { fetchMovies } from "@/store/slices/movies/movieActions";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 
 export default function Component() {
-  const [movies, setMovies] = useState<IMovie[]>([]);
 
+  const movies = useAppSelector((state) => state.movies.movies);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(fetchMovies())
-      .unwrap()
-      .then((data) => {
-        setMovies(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
     return () => {};
   }, []);
 
@@ -84,54 +77,35 @@ export default function Component() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
             {movies &&
               movies.map((movie) => (
-                <>
-                  <div className="bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden">
-                    <img
-                      src={movie.image}
-                      width="400"
-                      height="600"
-                      alt="Movie Poster"
-                      className="w-full h-[500px] object-cover"
-                    />
-                    <div className="p-4">
-                      <h3 className="text-xl font-bold">{movie.title}</h3>
-                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
-                        <ClockIcon className="w-4 h-4" />
-                        <span>{movie?.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-1">
-                        <CalendarIcon className="w-4 h-4" />
-                        <span>{movie.releaseDate?.toString()}</span>
-                      </div>
-                      <div className="flex gap-2 mt-4">
-                        <Button className="flex-1">Buy Tickets</Button>
-                        <Button variant="outline" className="flex-1" >
-                          Trailer
-                        </Button>
-                      </div>
+                <div
+                  key={movie._id}
+                  className="bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden"
+                >
+                  <img
+                    src={movie.image}
+                    width="400"
+                    height="600"
+                    alt="Movie Poster"
+                    className="w-full h-[500px] object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-xl font-bold">{movie.title}</h3>
+                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
+                      <ClockIcon className="w-4 h-4" />
+                      <span>{movie?.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-1">
+                      <CalendarIcon className="w-4 h-4" />
+                      <span>{movie.releaseDate?.toString()}</span>
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <Button className="flex-1">Buy Tickets</Button>
+                      <Button variant="outline" className="flex-1">
+                        Trailer
+                      </Button>
                     </div>
                   </div>
-                  {/* <div className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-lg">
-                    <img
-                      src={movie.image}
-                      width="400"
-                      height="600"
-                      alt="Movie Poster"
-                      className="w-full h-[500px] object-cover"
-                    />
-                    <div className="p-4">
-                      <h3 className="text-xl font-bold">Barbie</h3>
-                      <p className="text-gray-500 dark:text-gray-400 mt-2">
-                        A live-action film based on the popular Barbie doll.
-                      </p>
-                      <div className="flex justify-end mt-4">
-                        <Button variant="link" size="sm">
-                          Learn More
-                        </Button>
-                      </div>
-                    </div>
-                  </div> */}
-                </>
+                </div>
               ))}
           </div>
         </div>

@@ -2,7 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@/schema/SingupSchema";
@@ -11,6 +11,8 @@ import { signUp } from "@/store/slices/auth/authActions";
 import { useAppDispatch } from "@/store/store";
 
 export default function Signup() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -22,7 +24,14 @@ export default function Signup() {
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<SignupPayload> = (data) => {
-    dispatch(signUp(data));
+    dispatch(signUp(data))
+    .unwrap()
+    .then(() => {
+      navigate("/");
+    })
+    .catch((e) => {
+      console.log(e, "error");
+    });
   };
   return (
     <div className="flex min-h-screen items-center justify-center">

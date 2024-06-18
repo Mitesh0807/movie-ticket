@@ -21,16 +21,10 @@ export default function MovieForm() {
     } = useForm<MoviePayload>({
         resolver: zodResolver(MovieSchema),
     });
-
-    useEffect(() => {
-        dispatch(fetchGenres())
-
-    }, [])
-
+    
     const dispatch = useAppDispatch();
     const genres = useAppSelector((state) => state.genres.genres);
 
-    console.log(genres, selectedGenres, "selectedGenres");
 
     const onSubmit: SubmitHandler<MoviePayload> = (data) => {
         console.log(data, "data");
@@ -43,8 +37,8 @@ export default function MovieForm() {
     }, [dispatch]);
 
     return (
-        <div className="flex min-h-screen items-center justify-center w-[screen]">
-            <div className="mx-auto w-[screen] space-y-6">
+        <div className="flex min-h-screen items-center justify-center">
+            <div className="mx-auto max-w-[70%] space-y-6">
                 <div className="space-y-2 text-center">
                     <h1 className="text-3xl font-bold">Create a New Movie</h1>
                 </div>
