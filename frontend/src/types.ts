@@ -1,9 +1,11 @@
 import { z } from "zod";
 import { MovieSchema } from "@/schema/MovieSchema";
 import { GenreSchema } from "@/schema/GenreSchema";
+import { CinemaSchema } from "@/schema/CinemaSchema";
 
 export type MoviePayload = z.infer<typeof MovieSchema>;
 export type GenrePayload = z.infer<typeof GenreSchema>;
+export type CinemaPayload = z.infer<typeof CinemaSchema>;
 export interface IMovie {
   _id?: string;
   title: string;
@@ -42,7 +44,7 @@ export interface IReservation {
   seats: unknown[];
   ticketPrice: number;
   total: number;
-  showtimeId: string;
+  showtimeId: IShowtime;
   userId: string;
   phone: string;
   checkin?: boolean;
@@ -53,8 +55,8 @@ export interface IShowtime {
   startAt: string;
   startDate: Date;
   endDate: Date;
-  movieId: string;
-  cinemaId: string;
+  movieId: IMovie;
+  cinemaId: ICinema;
 }
 
 export interface IUser {

@@ -12,12 +12,11 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 
 export default function Component() {
-
   const movies = useAppSelector((state) => state.movies.movies);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchMovies())
+    dispatch(fetchMovies());
     return () => {};
   }, []);
 
@@ -25,7 +24,7 @@ export default function Component() {
     <>
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
-          <Carousel className="rounded-xl">
+          <Carousel opts={{ loop: true }} className="rounded-xl">
             <CarouselContent>
               {movies &&
                 movies.length &&

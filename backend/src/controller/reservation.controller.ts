@@ -45,7 +45,10 @@ export const getAllReservations = async (req: Request, res: Response): Promise<v
       return;
     }
     const reservations = await Reservation.find({ userId: user._id })
-      .populate('showtimeId', 'movieId cinemaId')
+      .populate({
+        path: 'showtimeId',
+        populate: [{ path: 'movieId' }, { path: 'cinemaId' }],
+      })
       .exec();
     res.send(reservations);
   } catch (e) {
@@ -158,9 +161,7 @@ export const deleteReservationById = async (req: Request, res: Response): Promis
       res.sendStatus(404);
       return;
     }
-    if (
-      reservation.userId.toString() !== req.user?._id.toString() 
-    ) {
+    if (reservation.userId.toString() !== req.user?._id.toString()) {
       res.status(401).send('Unauthorized');
       return;
     }
@@ -170,6 +171,3 @@ export const deleteReservationById = async (req: Request, res: Response): Promis
     res.status(400).send(e);
   }
 };
-
-
-
