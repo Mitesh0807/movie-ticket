@@ -10,7 +10,7 @@ import {
 import { requireSuperadmin } from '@/middlewares/auth.middlewares';
 const router = Router();
 
-router.post('/', createShowtime);
+router.post('/', requireSuperadmin, createShowtime);
 router.get('/', getAllShowtimes);
 router.get('/cinema/:id', getShowtimesByCinemaId);
 router.get('/:id', getShowtimeById);

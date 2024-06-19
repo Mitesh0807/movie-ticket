@@ -1,8 +1,26 @@
 import { Link, Outlet } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { SVGProps } from "react";
+import { SVGProps, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { admin } from "@/store/slices/auth/authActions";
+import Loading from "@/components/ui/Loading";
 
 function AdminLayout() {
+  const dispatch = useDispatch();
+  const { isAdmin, status } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    dispatch(admin());
+  }, [dispatch]);
+
+  if (status === "loading") {
+    return <Loading />;
+  }
+
+  if (!isAdmin) {
+    return <div>You are not authorized to access this page.</div>;
+  }
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center justify-between">
@@ -28,6 +46,12 @@ function AdminLayout() {
             className="text-sm font-medium hover:underline underline-offset-4"
           >
             Create Showtime
+          </Link>
+          <Link
+            to={"/admin/cinema/create"}
+            className="text-sm font-medium hover:underline underline-offset-4"
+          >
+            create Cinema
           </Link>
           <Link
             to={"/admin"}
@@ -57,10 +81,16 @@ function AdminLayout() {
           &copy; 2024 MoviePlex. All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link to={"/admin"} className="text-xs hover:underline underline-offset-4">
+          <Link
+            to={"/admin"}
+            className="text-xs hover:underline underline-offset-4"
+          >
             Terms of Service
           </Link>
-          <Link to={"/admin"} className="text-xs hover:underline underline-offset-4">
+          <Link
+            to={"/admin"}
+            className="text-xs hover:underline underline-offset-4"
+          >
             Privacy Policy
           </Link>
         </nav>

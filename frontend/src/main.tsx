@@ -20,6 +20,8 @@ const SeatSelection = lazy(() => import("@/components/Pages/SeatSelecation"));
 const MovieForm = lazy(() => import("@/components/Admin/CreateMovie"));
 const GenreForm = lazy(() => import("@/components/Admin/GenreForm"));
 const EditGenreForm = lazy(() => import("@/components/Admin/EditGenreForm"));
+const ShowTimeForm = lazy(() => import("@/components/Admin/CreateShowtime"));
+const CinemaForm = lazy(() => import("@/components/Admin/CreateCinema"));
 
 const router = createBrowserRouter([
   {
@@ -111,6 +113,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <EditGenreForm />
+          </Suspense>
+        ),
+      },
+      {
+        path: "showtime/create",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ShowTimeForm />
+          </Suspense>
+        ),
+      },
+      {
+        path: "cinema/create",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <CinemaForm />
           </Suspense>
         ),
       },

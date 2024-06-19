@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IShowtime } from "../../../types";
+import { IShowtime, ShowtimePayload } from "../../../types";
 import api from "../../../utils/api";
 
 export const fetchShowtimes = createAsyncThunk(
@@ -12,8 +12,8 @@ export const fetchShowtimes = createAsyncThunk(
 
 export const createShowtime = createAsyncThunk(
   "showtimes/create",
-  async (showtime: IShowtime) => {
-    const response = await api.post("showtimes", showtime);
+  async (showtime: ShowtimePayload) => {
+    const response = await api.post("/showtimes", showtime);
     return response.data;
   }
 );
@@ -21,7 +21,7 @@ export const createShowtime = createAsyncThunk(
 export const updateShowtime = createAsyncThunk(
   "showtimes/update",
   async (showtime: IShowtime) => {
-    const response = await api.put(`${"showtimes"}/${showtime._id}`, showtime);
+    const response = await api.put(`${"/showtimes"}/${showtime._id}`, showtime);
     return response.data;
   }
 );
@@ -29,7 +29,7 @@ export const updateShowtime = createAsyncThunk(
 export const deleteShowtime = createAsyncThunk(
   "showtimes/delete",
   async (id: string) => {
-    await api.delete(`${"showtimes"}/${id}`);
+    await api.delete(`${"/showtimes"}/${id}`);
     return id;
   }
 );
@@ -37,7 +37,7 @@ export const deleteShowtime = createAsyncThunk(
 export const fetchShowtimeById = createAsyncThunk(
   "showtimes/fetchById",
   async (id: string) => {
-    const response = await api.get(`showtimes/${id}`);
+    const response = await api.get(`/showtimes/${id}`);
     return response.data;
   }
 );
@@ -45,7 +45,7 @@ export const fetchShowtimeById = createAsyncThunk(
 export const fetchShowtimesByCinemaId = createAsyncThunk(
   "showtimes/fetchByCinemaId",
   async (cinemaId: string) => {
-    const response = await api.get(`showtimes/cinema/${cinemaId}`);
+    const response = await api.get(`/showtimes/cinema/${cinemaId}`);
     return response.data;
   }
 );
